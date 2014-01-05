@@ -1,0 +1,41 @@
+#!/bin/bash
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+
+# The logic to stop your application should be put in this script.
+
+STOPTIMEOUT=10
+FMT="%a %b %d %Y %H:%M:%S GMT%z (%Z)"
+
+function is_service_running(){
+	if [ -f $OPENSHIFT_DIY_DIR/beego.pid ]; then
+		beego_pid=$(cat $OPENSHIFT_DIY_DIR/beego.pid 2> /dev/null)
+		if `ps -p $beego_pid > /dev/null`; then
+			return 0
+		fi
+	fi
+
+	return 1
+}
+
+if [ -f $OPENSHIFT_DIY_DIR/beego.pid ]; then
+    beego_pid=$( cat $OPENSHIFT_DIY_DIR/beego.pid 2> /dev/null )
+fi
+
+if [ -n "$beego_pid" ]; then
+	logf="$OPENSHIFT_DIY_DIR/logs/beego.log"
+	echo "`date +"$FMT"`: Stopping application '$OPENSHIFT_APP_NAME' ..." >> $logf
+	kill $beego_pid
+	ret=$?
+    if [ $ret -eq 0 ]; then
+		TIMEOUT="$STOPTIMEOUT"
+		while [ $TIMEOUT -gt 0 ] && is_service_running ; do
+			kill -0 "$beego_pid" >/dev/null 2>&1 || break
+			sleep 1
+		    let TIMEOUT=${TIMEOUT}-1
+		done
+	fi
+	echo "`date +"$FMT"`: Stopped Go application '$OPENSHIFT_APP_NAME'" >> $logf
+    rm -f $OPENSHIFT_DIY_DIR/beego.pid
+else
+	echo "Warning: Application '$OPENSHIFT_APP_NAME' server exists without a pid file.  Use force-stop to kill." 1>&2
+fi

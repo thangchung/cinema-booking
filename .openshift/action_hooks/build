@@ -1,0 +1,67 @@
+#!/bin/bash
+
+set -eo pipefail
+
+version=${GOVERSION:-1.2}
+
+srcfile=${GOFILE:-go$version.$(uname|tr A-Z a-z)-amd64.tar.gz}
+
+url=${GOURL:-http://go.googlecode.com/files/$srcfile}
+
+dist=${GODIST:-$OPENSHIFT_DIY_DIR/cache/go-$version}
+
+if [ -d $dist/go ]; then
+	echo "Use Go $version."
+else
+	mkdir -p $dist
+	cd $dist
+	echo "Installing Go $version"
+	echo "Download..."
+	curl -sO $url
+	echo "Unzip..."
+	tar zxf $srcfile
+	rm -f $srcfile
+	echo "done"
+fi
+
+echo "Setting GOPATHS"
+
+export PATH="$PATH:$GOPATH/bin"
+export GOROOT=$dist/go
+
+export GOPATH=$OPENSHIFT_REPO_DIR
+export PATH=$GOROOT/bin:$PATH
+
+echo "Get Go 3rd packages:"
+
+echo "Fetching Revel web framework..."
+go get github.com/robfig/revel
+
+echo "Building Revel web framework..."
+go get github.com/robfig/revel/revel
+
+echo "Fetching MySQL"
+go get github.com/go-sql-driver/mysql
+
+echo "Fetching TourDL"
+cd /var/lib/openshift/52aa28e14382ec09430000ee/app-root/runtime/repo/src/
+git clone https://github.com/daflad/TourDL.git
+
+FMT="%a %b %d % %H:%M:%S GMT%z (%Z)"
+
+logf="$OPENSHIFT_DIY_DIR/logs/beego.log"
+
+pushd "$GOPATH/src/beego" > /dev/null
+(
+    echo "`date +"$FMT"`: Starting application '$OPENSHIFT_APP_NAME'..."
+    nohup revel run TourDL >> $logf 2>&1 &
+
+    ret=$?
+    npid=$!
+    if [ $ret -eq 0 ]; then
+            echo "$npid" > "$OPENSHIFT_DIY_DIR/beego.pid"
+	else
+            echo "Application '$OPENSHIFT_APP_NAME' failed to start - $ret" 1>&2
+            exit $ret
+    fi
+) >> $logf
