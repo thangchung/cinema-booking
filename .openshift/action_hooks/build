@@ -2,10 +2,6 @@
 
 set -eo pipefail
 
-gitUser="daflad"
-appName="tinitus-hq"
-
-
 version=${GOVERSION:-1.2}
 
 srcfile=${GOFILE:-go$version.$(uname|tr A-Z a-z)-amd64.tar.gz}
@@ -44,28 +40,28 @@ go get github.com/robfig/revel
 echo "Building Revel web framework..."
 go get github.com/robfig/revel/revel
 
-echo "Fetching MySQL"
-go get github.com/go-sql-driver/mysql
+# echo "Fetching MySQL"
+# go get github.com/go-sql-driver/mysql
 
-echo "Fetching $appName for user $gitUser"
-cd /var/lib/openshift/52aa28e14382ec09430000ee/app-root/runtime/repo/src/
-git clone "https://github.com/$gitUser/$appName.git"
+# echo "Fetching $appName for user $gitUser"
+# cd /var/lib/openshift/52aa28e14382ec09430000ee/app-root/runtime/repo/src/
+# git clone "https://github.com/$gitUser/$appName.git"
 
-FMT="%a %b %d % %H:%M:%S GMT%z (%Z)"
+# FMT="%a %b %d % %H:%M:%S GMT%z (%Z)"
 
-logf="$OPENSHIFT_DIY_DIR/logs/revel.log"
+# logf="$OPENSHIFT_DIY_DIR/logs/revel.log"
 
-pushd "$GOPATH/src" > /dev/null
-(
-    echo "`date +"$FMT"`: Starting application '$OPENSHIFT_APP_NAME'..."
-    nohup revel run tinitus-hq >> $logf 2>&1 &
+# pushd "$GOPATH/src" > /dev/null
+# (
+#     echo "`date +"$FMT"`: Starting application '$OPENSHIFT_APP_NAME'..."
+#     nohup revel run tinitus-hq >> $logf 2>&1 &
 
-    ret=$?
-    npid=$!
-    if [ $ret -eq 0 ]; then
-            echo "$npid" > "$OPENSHIFT_DIY_DIR/beego.pid"
-	else
-            echo "Application '$OPENSHIFT_APP_NAME' failed to start - $ret" 1>&2
-            exit $ret
-    fi
-) >> $logf
+#     ret=$?
+#     npid=$!
+#     if [ $ret -eq 0 ]; then
+#             echo "$npid" > "$OPENSHIFT_DIY_DIR/beego.pid"
+# 	else
+#             echo "Application '$OPENSHIFT_APP_NAME' failed to start - $ret" 1>&2
+#             exit $ret
+#     fi
+# ) >> $logf
