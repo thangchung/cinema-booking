@@ -6,9 +6,12 @@ A DIY go cart, set up for running revel on open shift.
 INSTRUCTIONS::
 ==============
 
-Create OPENSHIFT DIY CARTIDGE with this repo as the source
+Sign up to Openshift and create an OPENSHIFT DIY CARTIDGE
+using this repo as the source repo
 
-Once created, ssh into your machine and get the IP (echo OPENSHIFT_DIY_IP) and insert into the cont.app file found under src/app/conf/
+Once created, ssh into your machine and get the IP (echo OPENSHIFT_DIY_IP) 
+
+Insert into the marked position in the cont.app file, found under src/app/conf/
 
 TODO::
 ==============
