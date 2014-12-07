@@ -3,7 +3,7 @@ revel-go-cart
 
 A DIY go cart, set up for running revel on open shift.
 
-INSTRUCTIONS::
+INSTRUCTIONS
 ==============
 
 Sign up to Openshift and create an OPENSHIFT DIY CARTIDGE
@@ -13,7 +13,7 @@ Once created, ssh into your machine and get the IP (echo $OPENSHIFT_DIY_IP)
 
 Insert into the marked position in the cont.app file, found under src/app/conf/
 
-TODO::
+TODO
 ==============
 There is not a method for sucessfull stop yet.
 
