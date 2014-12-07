@@ -2,11 +2,11 @@
 
 set -eo pipefail
 
-version=${GOVERSION:-1.2}
+version=${GOVERSION:-1.3.3}
 
 srcfile=${GOFILE:-go$version.$(uname|tr A-Z a-z)-amd64.tar.gz}
 
-url=${GOURL:-http://go.googlecode.com/files/$srcfile}
+url=${GOURL:-https://storage.googleapis.com/golang/$srcfile}
 
 dist=${GODIST:-$OPENSHIFT_DIY_DIR/cache/go-$version}
 
@@ -14,7 +14,7 @@ if [ -d $dist/go ]; then
 	echo "Use Go $version."
 else
 	mkdir -p $dist
-	cd $dist
+	cd $dist	
 	echo "Installing Go $version"
 	echo "Download..."
 	curl -sO $url
@@ -26,42 +26,28 @@ fi
 
 echo "Setting GOPATHS"
 
-export PATH="$PATH:$GOPATH/bin"
 export GOROOT=$dist/go
-
-export GOPATH=$OPENSHIFT_REPO_DIR
-export PATH=$GOROOT/bin:$PATH
+export PATH=$PATH:$GOROOT/bin
+export GOPATH="$OPENSHIFT_REPO_DIR"
+export PATH="$PATH:$GOPATH/bin"
 
 echo "Get Go 3rd packages:"
 
 echo "Fetching Revel web framework..."
-go get github.com/robfig/revel
+
+go get github.com/revel/revel
 
 echo "Building Revel web framework..."
-go get github.com/robfig/revel/revel
 
-# echo "Fetching MySQL"
-# go get github.com/go-sql-driver/mysql
+go get github.com/revel/cmd/revel
 
-# echo "Fetching $appName for user $gitUser"
-# cd /var/lib/openshift/52aa28e14382ec09430000ee/app-root/runtime/repo/src/
-# git clone "https://github.com/$gitUser/$appName.git"
+FMT="%a %b %d % %H:%M:%S GMT%z (%Z)"
 
-# FMT="%a %b %d % %H:%M:%S GMT%z (%Z)"
+logf='revel.log'
 
-# logf="$OPENSHIFT_DIY_DIR/logs/revel.log"
+cd $OPENSHIFT_REPO_DIR
 
-# pushd "$GOPATH/src" > /dev/null
-# (
-#     echo "`date +"$FMT"`: Starting application '$OPENSHIFT_APP_NAME'..."
-#     nohup revel run tinitus-hq >> $logf 2>&1 &
+if [[ -z "$OPENSHIFT_INTERNAL_IP" ]]; then export OPENSHIFT_INTERNAL_IP="$OPENSHIFT_DIY_IP"; fi
+if [[ -z "$OPENSHIFT_INTERNAL_PORT" ]]; then export OPENSHIFT_INTERNAL_PORT="$OPENSHIFT_DIY_PORT"; fi
 
-#     ret=$?
-#     npid=$!
-#     if [ $ret -eq 0 ]; then
-#             echo "$npid" > "$OPENSHIFT_DIY_DIR/beego.pid"
-# 	else
-#             echo "Application '$OPENSHIFT_APP_NAME' failed to start - $ret" 1>&2
-#             exit $ret
-#     fi
-# ) >> $logf
+nohup revel run hda > ${OPENSHIFT_DIY_LOG_DIR}/revel.log 2>&1 &
