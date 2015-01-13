@@ -1,0 +1,53 @@
+#!/bin/bash
+
+set -eo pipefail
+
+version=${GOVERSION:-1.4}
+
+srcfile=${GOFILE:-go$version.$(uname|tr A-Z a-z)-amd64.tar.gz}
+
+url=${GOURL:-https://storage.googleapis.com/golang/$srcfile}
+
+dist=${GODIST:-$OPENSHIFT_DIY_DIR/cache/go-$version}
+
+if [ -d $dist/go ]; then
+	echo "Use Go $version."
+else
+	mkdir -p $dist
+	cd $dist	
+	echo "Installing Go $version"
+	echo "Download..."
+	curl -sO $url
+	echo "Unzip..."
+	tar zxf $srcfile
+	rm -f $srcfile
+	echo "done"
+fi
+
+echo "Setting GOPATHS"
+
+export GOROOT=$dist/go
+export PATH=$PATH:$GOROOT/bin
+export GOPATH="$OPENSHIFT_REPO_DIR"
+export PATH="$PATH:$GOPATH/bin"
+
+echo "Get Go 3rd packages:"
+
+echo "Fetching Revel web framework..."
+
+go get github.com/revel/revel
+
+echo "Building Revel web framework..."
+
+go get github.com/revel/cmd/revel
+
+FMT="%a %b %d % %H:%M:%S GMT%z (%Z)"
+
+logf='revel.log'
+
+cd $OPENSHIFT_REPO_DIR
+
+if [[ -z "$OPENSHIFT_INTERNAL_IP" ]]; then export OPENSHIFT_INTERNAL_IP="$OPENSHIFT_DIY_IP"; fi
+if [[ -z "$OPENSHIFT_INTERNAL_PORT" ]]; then export OPENSHIFT_INTERNAL_PORT="$OPENSHIFT_DIY_PORT"; fi
+
+nohup revel run app > ${OPENSHIFT_DIY_LOG_DIR}/revel.log 2>&1 &
