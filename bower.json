@@ -1,0 +1,25 @@
+{
+  "name": "cinema-booking",
+  "version": "1.0.0",
+  "authors": [
+    "thangchung"
+  ],
+  "description": "This is assets for cinema-booking project",
+  "keywords": [
+    "cinema-booking"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/frontend/vendors",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "bootstrap-sass-official": "~3.3.3"
+  }
+}
