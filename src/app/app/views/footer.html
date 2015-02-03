@@ -2,4 +2,9 @@
     {{template "debug.html" .}}
   {{end}}
   </body>
+  <script src="/public/js/commons.js" type="text/javascript" charset="utf-8"></script>
+  <script src="/public/js/bundle.js" type="text/javascript" charset="utf-8"></script>
+  {{range .moreScripts}}
+  <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
+  {{end}}
 </html>

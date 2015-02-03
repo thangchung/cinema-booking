@@ -5,8 +5,7 @@ var $ = require('jquery');
 module.exports = Debug;
 
 function Debug() {
-    $sidebar = 0;
-    console.log('hehehe');
+    var $sidebar = 0;
     $('#toggleSidebar').click(function() {
         if ($sidebar === 1) {
             $('#sidebar').hide();

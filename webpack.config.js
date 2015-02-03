@@ -40,14 +40,10 @@ module.exports = {
     ],
     module: {
         loaders: [
-            // { test: /\.json$/, loader: "json" },
-            /*{
-             test: /\.css$/,
-             loader: "style!css"
-             }, {
-             test: /\.(woff|svg|ttf|eot)([\?]?.*)$/,
-             loader: "file-loader?name=[name].[ext]"
-             }*/
+            { test: /\.js$/, loader: 'jsx-loader?harmony' },
+            { test: /\.scss/, loader: 'style-loader!css-loader!sass-loader' }, // use ! to chain loaders
+            { test: /\.css$/, loader: 'style-loader!css-loader' },
+            { test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192' } // inline base64 URLs for <=8k images, direct URLs for the rest
         ]
     }
 };
