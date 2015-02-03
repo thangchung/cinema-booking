@@ -1,5 +1,7 @@
-var DEST_DIR = './src/app/public/js';
-var SRC_DIR = './src/frontend';
+'use strict';
+
+var DEST_DIR = './src/app/public',
+	SRC_DIR = './src/frontend';
 
 module.exports = {
 	destinationDir: DEST_DIR,
