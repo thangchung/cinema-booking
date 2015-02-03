@@ -2,8 +2,7 @@
 * Database: The [schema](http://www.databaseanswers.org/data_models/cinema_bookings/index.htm) and the business [rule](http://www.databaseanswers.org/data_models/cinema_bookings/facts.htm)
 * Server side: [Revel](http://revel.github.io) framework([golang](https://golang.org) language)
 * Client side: [Reactjs](http://facebook.github.io/react) with [Flux](https://github.com/facebook/flux) architecture
-* Build system: [Gulp](http://gulpjs.com) streaming system
-* 
+* Build system: [Gulp](http://gulpjs.com) streaming system & [webpack](http://webpack.github.io)
 
 # How to run it?
 * Make sure you have golang, npm, gulp, webpack and bower packages installed
@@ -16,4 +15,4 @@
 * Build packages and bundle scripts: gulp dev
 * Run website on localhost: revel run app
 
-That's it (y)
+That's it ^_^
