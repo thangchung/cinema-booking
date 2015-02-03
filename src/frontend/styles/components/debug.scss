@@ -1,0 +1,16 @@
+#sidebar {
+    position: absolute;
+    right: 0px;
+    top: 69px;
+    max-width: 75%;
+    z-index: 1000;
+    background-color: #fee;
+    border: thin solid grey;
+    padding: 10px;
+}
+#toggleSidebar {
+    position: absolute;
+    right: 0px;
+    top: 50px;
+    background-color: #fee;
+}

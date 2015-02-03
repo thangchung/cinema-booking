@@ -1,15 +1,16 @@
 'use strict';
 
-var path = require('path');
-var webpack = require('webpack');
-var config = require('./config/global');
+var path    = require('path'),
+    webpack = require('webpack'),
+    config  = require('./config/global'),
+    info    = require('./package.json');
 
 module.exports = {
     cache: false,
     debug: true,
     devtool: 'source-map',
     entry: {
-        'main': path.join(__dirname, config.sourceDir) + '/main.js'
+        'main': path.join(__dirname, config.sourceDir) + '/js/main.js'
     },
     output: {
         filename: 'bundle.js'
@@ -20,6 +21,10 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.BannerPlugin(info.name + '\n' + info.version + ':' + Date.now() + ' [development build]'),
+        new webpack.DefinePlugin({
+            DEV: true
+        }),
         new webpack.ResolverPlugin(
             new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("./bower.json", ["main"])
         ),
@@ -37,12 +42,12 @@ module.exports = {
         loaders: [
             // { test: /\.json$/, loader: "json" },
             /*{
-                test: /\.css$/,
-                loader: "style!css"
-            }, {
-                test: /\.(woff|svg|ttf|eot)([\?]?.*)$/,
-                loader: "file-loader?name=[name].[ext]"
-            }*/
+             test: /\.css$/,
+             loader: "style!css"
+             }, {
+             test: /\.(woff|svg|ttf|eot)([\?]?.*)$/,
+             loader: "file-loader?name=[name].[ext]"
+             }*/
         ]
     }
 };

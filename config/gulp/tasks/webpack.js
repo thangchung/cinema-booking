@@ -6,7 +6,7 @@ var gulp = require('gulp'),
 	webpackConfig = require('../../../webpack.config.js');
 
 gulp.task("webpack", function() {
-    return gulp.src(config.sourceDir + '/main.js')
+    return gulp.src(config.sourceDir + '/js/main.js')
         .pipe(webpack(webpackConfig))
         .pipe(gulp.dest(config.destinationDir + '/js'));
 });

@@ -5,7 +5,7 @@ var gulp = require('gulp'),
 	config = require('../../global');
 
 gulp.task('sass', function () {
-    gulp.src(config.sourceDir + '/styles/*.scss')
+    gulp.src(config.sourceDir + '/styles/main.scss')
         .pipe(sass())
         .pipe(gulp.dest(config.destinationDir + '/css'));
 });
